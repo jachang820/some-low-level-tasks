@@ -1,0 +1,63 @@
+need to report throughput vs threads
+need to report wait-for-lock time, average time per operation vs threads
+
+get a per-thread total time by noting time before and after getting lock,
+compute elapsed difference
+
+wait-for-lock = total lock acquisition time / # lock operations
+8th column
+
+--lists=# option
+
+output should be
+list-option,threads,iterations,lists,operations,runtime,time-per-op,wait-for-lock
+
+graphs
+1. list=1 sync=m,s iter=1000 threads=1,2,4,8,12,16,24
+throughput (op/sec)
+
+2. list=1 sync=m iter=1000 threads=1,2,4,8,16,24
+wait-for-lock, time-per-op
+
+3a. yield=id list=4 threads=1,4,8,12,16 iter=1,2,4,8,16
+3b. yield=id list=4 threads=1,4,8,12,16 iter=10,20,40,80 sync=m,s
+successful iterations
+
+4. sync=m list=1,4,8,16 threads=1,2,4,8,12 iter=1000
+5. sync=s list=1,4,8,16 threads=1,2,4,8,12 iter=1000
+throughput for each #list
+
+
+FIRST. Finish the GP DONE
+SECOND. add wait for lock calculations DONE (debug pending)
+THIRD. Make necessary changes to Makefile DONE (debug pending)
+FOURTH. Change listing in README DONE
+FIVE (hardest). Add list option DONE
+SIX. make graphs / debug
+SEVEN. Run test script
+EIGHT. answer questions
+NINE. make dist
+TEN. submit
+
+
+move bin back to where it was
+
+create a struct
+struct list_info {
+	void *list;
+	int bin;
+}
+
+list_info *li_info;
+li_info->list = &list;
+li_info->bin = bin;
+SortedList_insert((SortedList_t*) li_info, key);
+
+
+DO THIS PART
+and in insert:
+list_info *info = (list_info*) list;
+SortedList_t* sList = info->list;
+int bin = info->bin;
+
+debug

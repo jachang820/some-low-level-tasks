@@ -1,0 +1,56 @@
+NAME: Jonathan Chang
+EMAIL: j.a.chang820@gmail.com
+ID: 104853981
+
+Files included:
+README - This file, a brief description.
+lab0.c - Source file for copying stdin to stdout with read(2) and write(2)
+       	 Usage: /lab0 --input=filename --output=filename --segfault --catch
+	 --input     : Input file redirection
+	 --output    : Output file redirection
+	 --segfault  : Forces a segmentation fault
+	 --catch     : Catches segmentation fault by using a new handler
+	 	       with signal(2)
+Makefile -
+	 Make options:
+	 (default)   : Builds executable with -g for debugging
+	 check       : Performs a series of checks to test for correctness
+	 dist        : Compresses files into .tgz gzip tar
+	 clean	     : Deletes all files created by the Makefile
+backtrace.png  - Screenshot of stack backtrace at the segmentation fault
+breakpoint.png - Screenshot of break before the fault and the null pointer
+
+Smoke-test cases:
+1. Error free build
+2. Error free build with --catch option
+Exit code and existence of stderr for:
+3. --segfault
+4. --segfault --catch
+5. Invalid option
+6. Invalid argument
+7. --input=nonexistent_file
+8. --output (permission denied)
+9.  stdin --> stdout
+10. input --> stdout
+11. stdin --> output
+12. input --> output
+
+Resources used: Besides the specified man files, project description page, and
+ smoke-test bash script, the following online resources were used:
+
+https://linux.die.net/man/2/lseek
+lseek(2) was suggested on the man page for write(2) as means to figure out the
+size of the buffer.
+
+https://www.gnu.org/software/make/manual/html_node/Makefile-Contents.html
+The general purpose manual for Makefiles was useful to discover some syntax
+issues.
+
+https://www.gnu.org/software/make/manual/html_node/Echoing.html
+Silencing recipe echo with .SILENT: was especially helpful in cleaning up the
+output from make check.
+
+https://stackoverflow.com/questions/748445/shell-status-codes-in-make
+This page explains how to escape the shell variable $? and also has a brief
+explanation for why it is necessary to string every line with continuation
+character \

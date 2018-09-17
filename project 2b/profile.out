@@ -1,0 +1,90 @@
+ROUTINE ====================== SortedList_insert in /u/ee/ugrad/changj/CS111/project2b/SortedList.c
+    32    512 Total samples (flat / cumulative)
+     .      .   98: void release_lock(int bin) {
+     .      .   99:   if (sync_opt == MUTEX) pthread_mutex_unlock(&mutex[bin]);
+     .      .  100:   if (sync_opt == SPINLOCK) __sync_lock_release(&spinlock[bin]);
+     .      .  101: }
+     .      .  102: 
+---
+     .      .  103: void SortedList_insert(SortedList_t *list, SortedListElement_t *element) {
+     .      .  104:   struct ListInfo *sList = (struct ListInfo*) list;
+     .      .  105:   SortedListElement_t *it = (SortedListElement_t*) sList->list_obj;
+     .      .  106:   int limiter = 0;
+     .      .  107:   int bin = sList->bin;
+     .      .  108: 
+     .    356  109:   set_lock(bin, &(sList->timer));
+     .      .  110: 
+    22    146  111:   while (it->next != NULL && strcmp(it->next->key, element->key) < 0) {
+     5      5  112:     if (limiter >= num_elements) break; /* prevent infinite loops */
+     5      5  113:     it = it->next;
+     .      .  114:     limiter++;
+     .      .  115:   }
+     .      .  116: 
+     .      .  117:   if (opt_yield & INSERT_YIELD)
+     .      .  118:     sched_yield();
+     .      .  119: 
+     .      .  120:   if (limiter <= num_elements) {
+     .      .  121:     if (it->next == NULL || limiter == num_elements) { /* end of list */
+     .      .  122:       element->next = NULL; 
+     .      .  123:     }
+     .      .  124:     else {
+     .      .  125:       it->next->prev = element;
+     .      .  126:       element->next = it->next;
+     .      .  127:     }
+     .      .  128:     element->prev = it;
+     .      .  129:     it->next = element;
+     .      .  130:   }
+     .      .  131: 
+     .      .  132:   release_lock(bin);
+     .      .  133: }
+---
+     .      .  134: 
+     .      .  135: 
+     .      .  136: int SortedList_delete(SortedListElement_t *element) {
+     .      .  137:   struct ListInfo *sList = (struct ListInfo*) element;
+     .      .  138:   SortedListElement_t *el = (SortedListElement_t*) sList->list_obj;
+ROUTINE ====================== SortedList_insert in /u/ee/ugrad/changj/CS111/project2b/SortedList.c
+    32    512 Total samples (flat / cumulative)
+     .      .   98: void release_lock(int bin) {
+     .      .   99:   if (sync_opt == MUTEX) pthread_mutex_unlock(&mutex[bin]);
+     .      .  100:   if (sync_opt == SPINLOCK) __sync_lock_release(&spinlock[bin]);
+     .      .  101: }
+     .      .  102: 
+---
+     .      .  103: void SortedList_insert(SortedList_t *list, SortedListElement_t *element) {
+     .      .  104:   struct ListInfo *sList = (struct ListInfo*) list;
+     .      .  105:   SortedListElement_t *it = (SortedListElement_t*) sList->list_obj;
+     .      .  106:   int limiter = 0;
+     .      .  107:   int bin = sList->bin;
+     .      .  108: 
+     .    356  109:   set_lock(bin, &(sList->timer));
+     .      .  110: 
+    22    146  111:   while (it->next != NULL && strcmp(it->next->key, element->key) < 0) {
+     5      5  112:     if (limiter >= num_elements) break; /* prevent infinite loops */
+     5      5  113:     it = it->next;
+     .      .  114:     limiter++;
+     .      .  115:   }
+     .      .  116: 
+     .      .  117:   if (opt_yield & INSERT_YIELD)
+     .      .  118:     sched_yield();
+     .      .  119: 
+     .      .  120:   if (limiter <= num_elements) {
+     .      .  121:     if (it->next == NULL || limiter == num_elements) { /* end of list */
+     .      .  122:       element->next = NULL; 
+     .      .  123:     }
+     .      .  124:     else {
+     .      .  125:       it->next->prev = element;
+     .      .  126:       element->next = it->next;
+     .      .  127:     }
+     .      .  128:     element->prev = it;
+     .      .  129:     it->next = element;
+     .      .  130:   }
+     .      .  131: 
+     .      .  132:   release_lock(bin);
+     .      .  133: }
+---
+     .      .  134: 
+     .      .  135: 
+     .      .  136: int SortedList_delete(SortedListElement_t *element) {
+     .      .  137:   struct ListInfo *sList = (struct ListInfo*) element;
+     .      .  138:   SortedListElement_t *el = (SortedListElement_t*) sList->list_obj;

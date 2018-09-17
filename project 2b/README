@@ -1,0 +1,169 @@
+NAME: Jonathan Chang
+EMAIL: j.a.chang820@gmail.com
+ID: 104853981
+
+Files included:
+README		- This file, a brief description, and questions answered.
+
+Makefile	- Make options:
+		  (default)
+		  build     : Builds executables for lab2_add and lab2_list.
+		  
+		  tests     : Runs various tests of threading, synchronizing,
+		  	      and yielding behavior in order for graphing
+			      script to work.
+
+		  profile   : Uses gperftools to run a CPU profile and generate
+		  	      report showing the most costly function and where
+			      the bottleneck is.
+
+		  graphs    : Run gnuplot scripts lab2_list.gp.
+		  	      Produced graphs progressively isolate bottleneck,
+			      then demonstrates effectiveness of solution.
+
+		  dist      : Create distribution file in .tgz gzip tar.
+
+		  clean	    : Deletes all output created by the Makefile.
+
+lab2_list.c     - Source file for multithreaded doubly-linked Sorted List
+		  operation: insert, delete, lookup, length. Includes
+		  options for mutex, spinlock, sched_yielding to test how
+		  these techniques affect Sorted List operations.
+		  Usage: ./lab2a_list --threads=# --iterations=# --sync=m|s
+		  	 --yield=[idl] --list=#
+		  threads   : number of threads to create
+		  iterations: times each thread will insert elements into the
+		  	      list and delete elements from the list
+		  sync	    : use pthread_mutex, or atomic operations
+		  	      __sync_lock_test_and_set to synchronize and
+			      prevent race conditions
+		  yield	    : use sched_yield() to force more errors
+		  list	    : number of sublists to eliminate multithreading
+		  	      bottleneck
+
+SortedList.h	- Header for SortedList.
+
+SortedList.c    - SortedList implementation. Includes some error checking
+		  mechanisms and synchronizing and yielding options.
+
+PreciseTimer.h  - Header for PreciseTimer.
+
+PreciseTimer.c  - PreciseTimer implementation so that both SortedList.c and
+		  lab2_list.c can access the timer in a clearer way.
+
+ListInfo.h	- struct holding a sublist, the sublist number, and its
+		  operations run time in order to pass more data into
+		  SortedList functions with a cast pointer
+
+lab2b_list.csv  - Results generated from the lab2_list program.
+		  Format is:
+		  * The name of the test
+		  * The number of threads
+		  * The number of iterations
+		  * The number of sub-lists
+		  * The total number of operations
+		  * The total run time (in nanoseconds)
+		  * The average run time per operation (in nanoseconds)
+		  * The average time waiting for lock (in nanoseconds)
+(profiles)
+profile.raw	- CPU Profile generated gperftools in a compressed protobuf
+
+profile.out	- Text report of the function that the program spends the 
+		  longest time in -- SortedList_insert. It shows samples (in 
+		  0.01 seconds) spent on each instruction.
+(graphs)
+lab2b-1.png	- Throughput vs. number of threads for each synchronization 
+		  option under a single list.
+
+lab2b-2.png 	- Time waiting for lock as a fraction of time per operation.
+
+lab2b-3.png 	- Operations without failure, protected and unprotected.
+
+lab2b-4.png 	- Throughput vs. number of threads for mutex under different 
+		  sub lists.
+
+lab2b-5.png	- Throughput vs. number of threads for spin-lock under 
+		  different sub lists.
+
+Slip Days used: 1
+Got stuck on an issue where gnuplot doesn't accept the same regexp that Bash
+accepts.
+
+Resources used:
+https://github.com/gperftools/gperftools
+The gperftools documentation. Explains all the different compile and linking
+options.
+
+https://github.com/google/pprof
+The pprof documentation. Explains how to use some of the prominent options
+pprof has for reporting.
+
+https://ftp.gnu.org/old-gnu/Manuals/gprof-2.9.1/html_chapter/gprof_5.html
+Explains the how interpret the table outputted by pprof's 'top' option.
+
+
+QUESTION 2.3.1
+In a 1 thread list, the cycles must be spent on comparisons necessary for
+iteration of the list in insert and lookup functions. For a 2 thread list,
+because a comparison is needed  to check or assert the value of the lock, it
+may spend a similar time on the locking. But there should not be many cycles.
+However, as threads get higher, more threads get blocked for any given
+operation. This is especially the case for spin-locks, which keep the thread
+spinning and wastes CPU cycles. Therefore, for spin-locks, most time/cycle
+must be spent on the locking mechanism. Mutexes are better and will still take
+some of the cycle due to the comparisons explained in the 2 thread case, but 
+since the threads are simply blocked instead of spinning, they are not taking
+CPU cycles. Therefore, except for the spin-locks, most time should be spent on
+the comparisons in the operations.
+
+
+QUESTION 2.3.2
+The highest consuming line of code is the __sync_lock_test_and_set(&spinlock)
+line that causes threads to spin. The most expensive function is 
+SortedList_insert. Since only a thread that has obtained the lock is running
+the operations, and every other thread is stuck spinning, larger numbers of 
+threads mean more threads are stuck spinning. It is noted that while the
+spinlock takes up most of the CPU by far, the second highest consuming line of
+code is the while look header that compares each element in the list with the
+next, as predicted in the first question.
+
+
+QUESTION 2.3.3
+The completion time per operation only counts the time elapsed once. The wait
+time per operation recounts the elapsed time per each thread. Since the
+majority of time is spent on the lock anyways, the wait time should approach
+(n - 1)^2 times the completion time, where n is the number of threads. This
+is because while each thread obtains the lock, every other thread is blocked.
+This occurs per each thread. While more threads cause more conflicts and cause
+time to rise per operation, the completion time only counts the increase once
+regardless of the number of threads, since it starts before the thread
+creation and ends after thread joining. Therefore, it rises much less
+dramatically.
+
+
+QUESTION 2.3.4
+The performance seems to increase by the same scale with more sub-lists,
+regardless of the number of threads. It is difficult to quantify this change
+with words, since neither axes are linear (they are log 10, and log 2).
+However, given the axes, the line appears linear, and the distance between
+the lines are more or less maintained.
+
+The throughput should continue to increase as the number of sub lists increase,
+but less so. Increasing sub lists decrease the probability of threads blocking
+since the probability of inserting to the same sub list is decreased. However,
+there is realistically a limited number of CPU cores, and therefore a limited
+number of threads before the overhead in its creation overcomes and additional
+processing they allow. Increasing sub lists over threads has diminishing
+returns. For example, with 2 threads, 1 list, there is 100% of blocking per
+operation. With 2 sub lists, there is 25% of blocking, and with 3 sub lists,
+there is 11% of blocking.
+
+It does not seem true that an N-way partitioned list is equivalent to the
+throughput of a single list with 1/N threads. There is additional overhead in
+creating sub lists. Also sub lists, intuitionally, does not seem to benefit
+length and delete functions; they may, in fact, make them more complicated.
+Also, consider 1 single list with 2 threads. 1 of the threads will block 100%
+of the time for each operation. Consider 4 sub lists with 8 threads. Half of
+the threads, again as before, will block 100% of the time for each operation.
+But 3 threads will have 25% chance of blocking each if they happen to insert
+to the same sub list as the first thread. Therefore, they are not equivalent.

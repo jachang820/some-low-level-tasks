@@ -1,0 +1,42 @@
+NAME: Jonathan Chang
+EMAIL: j.a.chang820@gmail.com
+ID: 104853981
+
+Note: I tried various settings for tcsetattr(3) and could not get non-
+      canonical mode to work exactly as expected. No matter what, the
+      erase character is still recognized by the terminal, but the
+      shell will not recognize it sometimes. This turned out to be due
+      to that write(2)ing the erase (ascii 127) character to stdout
+      appears as if a character is being deleted, despite that it is
+      already output. However, this also causes shell to have
+      inconsistent behavior. One solution is to stop passing the erase
+      character to shell.
+
+      On the other hand...
+
+      Setting the iflag to ISTRIP seems to have the same effect as setting
+      the lflag to ~(ICANON|ECHO), except the latter exits immediately with
+      the CTRL+C interrupt signal. To fix, the iflag can be set with IGNBRK.
+      However, short of using raw mode cfmakeraw(), this behavior continues
+      to obfuscate what non-canonical mode should be.
+
+Files included:
+README   - This file, a brief description.
+lab1a.c  - Source file for shell with non-canonical input mode with no echo.
+	   Usage: /lab1a --shell
+	   --shell   : Echoes input from terminal to shell
+Makefile - Make options:
+	   (default) : Builds executable
+	   dist      : Compresses files into .tgz gzip tar
+	   clean     : Deletes all files created by the Makefile
+
+Resources used: man pages for all the commands
+
+Slip day (1): My laptop refused to POST this weekend. I drove home to fix it,
+     	      hoping I would have the necessary screwdriver to take off the
+	      bottom plate -- I did not. When all hope was lost, it finally
+	      worked at 1AM in the morning. I spent some time trying to
+	      figure out whether VPN worked with UCLA even though I'm at home.
+	      It did.
+
+	      Sounds unlikely, but it's true. Murphy's Law...

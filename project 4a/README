@@ -1,0 +1,25 @@
+NAME:  Jonathan Chang
+EMAIL: j.a.chang820@gmail.com
+ID:    104853981
+
+Serial Number
+Intel Edison Board:    FZEDA 652D 01VAL 500
+Edison Arduino* Board: FZAR 652B 01VAL 500
+
+MAC Address
+usb0:                  02:00:86:bd:6f:14
+wlan0:                 90:b6:86:0e:7d:ed
+
+Files included:
+README	     - This file, a brief description, and board identification.
+selfie.png   - A selfie of Jonathan Chang holding his digital baby.
+edison-1.png - A screen shot from PuTTy connected to the Edison board by serial.
+	       It shows configure_edison --name and ifconfig to prove that the
+	       network setup was completed.
+edison-2.png - A screen shot from Ubuntu's Bash running on the Linux Subsystem
+	       for Windows. It shows a successful scp command copying a trivial
+	       Hello World code file from the laptop to Edison.
+edison-3.png - A screen shot from Bash, connected to Edison by ssh, of the
+	       building and running of the Hello World program in Edison.
+edison-4.png - A screen shot from Bash, connected to Edison by ssh, of git being
+	       installed with opkg, and a repository cloned on Edison.

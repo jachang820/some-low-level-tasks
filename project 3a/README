@@ -1,0 +1,50 @@
+NAME: Jonathan Chang
+EMAIL: j.a.chang820@gmail.com
+ID: 104853981
+
+Usage:
+	./lab3a image_filename
+	image_filename is filename of the EXT2 image.
+
+Files included:
+README		- This file, a brief description.
+
+lab3a.c		- Source file for program that reads an EXT2_DYNAMIC_REV image
+		  and prints a report to stdout.
+
+ext2_fs.h	- Provided header with EXT2 image structures.
+
+print_error.h	- Header for function to print some error messages.
+
+print_error.c   - Source file to print error and avoid cluttering other code.
+
+ImgReader.h     - Header to deal with all I/O operations regarding image.
+
+ImgReader.c     - Source file with functions to read the image file into the
+		  appropriate structures.
+
+CsvWriter.c     - Souce file to output the structures to correct report format.
+
+Makefile	- Make options
+		  (default) : compiles lab3a program
+		  dist      : creates the deliverable tarball
+		  clean     : deletes all generated output
+
+Resources used:
+
+http://www.nongnu.org/ext2-doc/ext2.html
+
+EXT2 structures definitions and explanations tell me where to store and extract
+information.
+
+https://linux.die.net/man/2/pread
+
+I think this was the only man page that I needed this time. Actually I did
+briefly refer to strftime.
+
+Slip days used:
+
+2. Had various difficulties regarding pointers that wouldn't
+let me read the correct values of things. The project didn't seem like it would
+be that difficult, and these issues were completely unforeseen, so I seem to
+have mismanaged my time.

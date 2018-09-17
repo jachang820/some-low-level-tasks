@@ -1,0 +1,17 @@
+/*
+ * NAME: Jonathan Chang
+ * EMAIL: j.a.chang820@gmail.com
+ * ID: 104853981
+ */ 
+#include <time.h>
+
+struct PreciseTimer {
+  struct timespec start_time;
+  struct timespec end_time;
+  long long diff;
+};
+
+void PreciseTimer_start(struct PreciseTimer *timer);
+void PreciseTimer_end(struct PreciseTimer *timer);
+void PreciseTimer_report(struct PreciseTimer *timer);
+float PreciseTimer_elapsedFloat(struct PreciseTimer *timer);

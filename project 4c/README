@@ -1,0 +1,42 @@
+NAME: Jonathan Chang
+EMAIL: j.a.chang820@gmail.com
+ID: 104853981
+
+Files included:
+README		- This file, a brief description, and questions answered.
+
+Makefile	- Make options:
+		  (default)
+		  build     : Builds executables lab4c_tcp and lab4c_tls.
+
+		  dist      : Create distribution file in .tgz gzip tar.
+
+		  clean	    : Deletes all output created by the Makefile.
+
+lab4c.c         - Source file for program that samples temperature using the
+		  Intel Edison IoT board and the Grove Shield and temperature
+		  sensor, takes in commands from a server and sends a log. 
+		  Usage: ./lab4b port --id=# --host=hostname --log=filename
+		  port      : port number to communicate with server
+		  id        : student id number for server identification
+		  host	    : url to server
+		  log	    : log temperature samples and commands to logfile
+
+EdisonSensors.h	- Header for EdisonSensors.
+
+EdisonSensors.c - Contains all related functions for AIO and GPIO setting and
+		  retrieval with the MRAA library.
+
+PreciseTimer.h  - Header for PreciseTimer.
+
+PreciseTimer.c  - PreciseTimer implementation to provide convenient functions
+		  for sampling.
+
+Resources used:
+Referred mostly to previous labs.
+
+https://aticleworld.com/ssl-server-client-using-openssl-in-c/
+This article gives a detailed explanation of SSL and a brief example.
+
+https://www.linuxquestions.org/questions/programming-9/tcp-file-transfer-in-c-with-socket-server-client-on-linux-help-with-code-4175413995/
+This thread contains some troubleshooting with sockets and some nice example code.

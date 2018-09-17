@@ -1,0 +1,35 @@
+NAME: Jonathan Chang
+EMAIL: j.a.chang820@gmail.com
+ID: 104853981
+
+Files included:
+README		- This file, a brief description.
+
+Makefile	- Make options:
+		  (default)
+		  build		: Creates script for running lab3b.
+		  dist		: Creates distribution tar.
+		  clean		: Removes all output by Makefile.
+
+lab3b.rb	- Source file for image report analyzer. It's written in
+		  Ruby 2.0.0, supported on lnxsrv09. The language was chosen
+		  for its flexibility in object handling (all types are
+		  objects), regular expressions, and first-class functions
+		  that make it easy to manipulate text.
+		  Usage: ./lab3b csv_file
+
+Resources used:
+
+https://ruby-doc.org/core-2.0.0/
+
+The documentation for Ruby regarding String, Array, and Set objects were
+relevant here.
+
+https://stackoverflow.com/a/649462
+
+This answer post tells how to include and use a multi-line string in a
+Makefile. This makes it easier to generate a script file to run a Ruby script
+without the .rb extension. It might have been possible to install a Ruby gem,
+an extension to package the script, link Ruby libraries, to create an 
+executable, but this might run into privilege issues with sudo. A bash script
+seems like it should work for the task. 

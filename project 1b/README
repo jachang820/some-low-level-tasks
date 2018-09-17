@@ -1,0 +1,106 @@
+NAME: Jonathan Chang
+EMAIL: j.a.chang820@gmail.com
+ID: 104853981
+
+Files included:
+README	        - This file, a brief description.
+
+lab1b-client.c  - Source file for client that interacts with server that runs
+		  a shell.
+	   	  
+		  Usage: /lab1b-client --port=portno --log=filename
+		  	 --encrypt=filename --host=name
+		  --port    : Port number to connect with server
+		  --log     : Log of communication with server
+		  --encrypt : Encrypt communication with key (twofish)
+		  --host    : Connect with host name
+
+lab1b-server.c  - Source file for server that runs a shell.
+
+		  Usage: /lab1b-server --port=portno --encrypt=filename
+		  --port    : Port number to connect with client
+		  --encrypt : Encrypt communication with key (twofish)
+
+Makefile        - Make options:
+	   	  (default) : Builds executables for client and server
+	   	  dist      : Compresses files into .tgz gzip tar
+	   	  clean     : Deletes all files created by the Makefile
+
+my.key          - Contains key used to test encryption.
+
+Resources used:
+
+man pages for all the commands
+
+the socket tutorial page specified in the project description
+
+https://stackoverflow.com/a/30476250
+Explains a neat trick of how to simulate a constructor for a struct in C.
+	  	  
+https://stackoverflow.com/a/25383329
+Explains how to convert pointers to int using correct sizes.
+
+https://stackoverflow.com/a/9655242
+Explains how to convert int to strings using sprintf().
+
+Notes:
+
+1. I spent some 6-8 hours, at least, maybe more, debugging a problem where
+   reading or decrypting text from the server would cause random garbage
+   characters throughout. Encryption and decryption was fine from client to
+   server, and the server was receiving text from the shell perfectly. I
+   tried everything I could think of. In the end, the only thing that worked
+   was changing the encryption algorithm from "twofish" to e.g. "blowfish".
+   This fixed 99% of all output problems.
+
+2. I spent another 8-10 hours debugging a problem where mcrypt_generic() and
+   mdecrypt_generic() would freeze upon receiving a newline character. The
+   solution, as it turned out, had to do with the buffer being void* or
+   char* and const. Although read(2) and write(2) takes non-const buffers,
+   it may not modify them, so it doesn't cause an issue. Judicious usage of
+   strdup and memset across the program, to make sure all modifiable 
+   variables are c-strings (null-terminated) solved some of the problems.
+   
+3. What also helped as setting default values even for unused parameters,
+   since an accidental dereference or IO operation could (and did) cause
+   impossible-to-find segmentation faults that took working through the
+   entire program over and over to smooth them out. This was especially
+   time consuming since each test required that I open 2 terminal windows
+   and log them both in, go to the correct directory. In many cases, the
+   bugs caused the terminals to freeze.
+
+4. In some cases, using the --log option caused the port to be unusable for
+   a couple minutes after. Bind would fail with an error that says the port
+   is already in use or permission denied. I tried using strdup carefully
+   but I don't think that did anything. If the problem is fixed, I'm not
+   sure what fixed it.
+
+5. It's quite common that a bug would appear to be caused by something
+   completely unrelated, like free() would cause an invalid pointer error,
+   only if the --encrypt option is active. I deep dive into the logic of the
+   code, only to arrive back at where I started, and the bug gone, and I'm
+   not sure what I changed.
+
+6. 1-5 probably suggest that it's time to start using Git and TDD unit tests.
+
+7. To simplify testing, and reduce the number of files I had to deal with,
+   both the client and server uses the same code. In testing phase, I
+   modified only ./lab1b.c, and changed make to use ./lab1b.c to output two
+   programs ./lab1b-server and lab1b-client. The code uses argv[0] to
+   determine whether to run server or client code. That way I don't get
+   confused about which code I'm looking at in the twilight hours of 
+   troubleshooting.
+
+8. All exit(1) error messages are somewhat generic, based on the function
+   that caused it. I used a function check() to evaluate these functions for
+   improper values, like -1, or NULL, or some other constant, using a
+   function pointer to a comparator so it knows what values to look out for.
+
+9. It's probably not good practice to use so many global variables, and I
+   tried to keep as many local if I can. Ultimately, it became too much
+   trouble. The program arguments (key, log, port, hostname), I managed to
+   keep within the functions. One problem was that signals could only take
+   an (int signum) argument, and I needed to free up pointers allocated with
+   malloc(). The solution was to cast a struct param_args* as an int, and 
+   then cast it back to param_args* type. In the end, I don't think I really
+   needed to do that.

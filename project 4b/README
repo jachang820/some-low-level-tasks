@@ -1,0 +1,82 @@
+NAME: Jonathan Chang
+EMAIL: j.a.chang820@gmail.com
+ID: 104853981
+
+Files included:
+README		- This file, a brief description, and questions answered.
+
+Makefile	- Make options:
+		  (default)
+		  build     : Builds executable for lab4b.
+		  
+		  check     : Smoke-test to see whether sensors work.
+
+		  dist      : Create distribution file in .tgz gzip tar.
+
+		  clean	    : Deletes all output created by the Makefile.
+
+lab4b.c         - Source file for program that samples temperature using the
+		  Intel Edison IoT board and the Grove Shield and temperature
+		  sensor. 
+		  Usage: ./lab4b --period=# --scale=F|C --log=filename
+		  period    : sampling period in number of seconds
+		  	      (precision to milliseconds)
+		  scale	    : Fahrenheit or Celsius
+		  log	    : log temperature samples and commands to logfile
+
+EdisonSensors.h	- Header for EdisonSensors.
+
+EdisonSensors.c - Contains all related functions for AIO and GPIO setting and
+		  retrieval with the MRAA library.
+
+PreciseTimer.h  - Header for PreciseTimer.
+
+PreciseTimer.c  - PreciseTimer implementation to provide convenient functions
+		  for sampling.
+
+Resources used:
+Lots of Linux mans!
+
+www.cprogramming.com/debugging/valgrind.html
+Explains how to use valgrind to find memory leaks and debug program logic.
+I used sudo apt-get install valgrind instead of downloading the tar.
+
+stackoverflow.com/questions/21959764/math-library-included-but-error-undefined-ref
+Explained why -lm is needed to link to the math library in addition to
+including math.h.
+
+stackoverflow.com/questions/24801260/how-to-prevent-echoing-of-escape-characters-in-c
+Convinced me that I had to use non-echo non-canonical mode to achieve the UI
+that I want; namely, to maintain the input line despite stdout of the report
+each sampling period. Also, it seems impossible to remove special characters
+such as DEL, which shows up as ^?, using non-canonical mode.
+
+pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap11.html#tag_11_01_09
+Gives detailed information of all the terminal options. I spent some time messing
+around with them to get the stdin and stdout behavior I wanted.
+
+stackoverflow.com/questions/11127970/is-it-possible-to-write-data-into-own-stdin
+Confirmed it is impossible to write back into stdin programmatically without
+either:
+1. ungetc() can push single characters back in, but not before it echoes.
+2. Redirection. I didn't want to change these settings back and forth if I could
+avoid it. It ended up being unnecessary.
+
+stackoverflow.com/questions/1508490/erase-the-current-printed-console-line
+Explains how to erase current line on the console. I used it to clear the line
+when the sampling report interrupts the input. Instead of having the line cut off
+and output before the report, I wanted the report on its own line. I used non-
+canonical output to read and save the input, and this technique to remove the
+line in the console, and wrote the input back in after the report to preserve
+incomplete inputs.
+
+iotdk.intel.com/docs/master/mraa/gpio_8h.html
+GPIO file reference with examples.
+
+iotdk.intel.com/docs/master/mraa/aio_8h.html
+AIO file reference with examples.
+
+communities.intel.com/thread/56294
+Explains how setting time zones work behind the scenes and how to set it for the
+Edison. It was educational.
+
