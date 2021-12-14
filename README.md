@@ -1,5 +1,13 @@
-#CS111 Projects#
+# Series of Projects Revolving Around Low Level Systems
 
-##Disclaimer to UCLA Students##
+These are a series of weekly projects regarding one of the best courses of a certain CS curriculum. Note that each part (in the subfolders) contain readmes including inputs, dependencies and sources. 
 
-Note that this is for the purposes of showcasing programming for resume purposes or discussing with friends not from UCLA. If you go to UCLA, please attempt the projects on your own, or copy at your own risk. CS111 gets you used to looking up obscure library calls and API. Looking up solutions online might help further your understanding of the specifications, but copying prevents you from learning anything. Trust me -- if you walk away with 0 systems knowledge whatsoever, getting used to reading library APIs will make you more efficient in whatever you want to pursue. In that sense, CS111 with Prof. Reiher was one of the best CS classes in the UCLA curriculum.
+## Topics
+
+The topic of each part are as follows:
+
+0. The warmup project allows the user to induce segfaults, which the program will catch.
+1. These are client and server programs that allow client to write into the terminal, and server to repeat the message back.
+2. These test the reliability of mutex or spinlock on critical sections of list operations, like sorting a list.
+3. These attempt to analyze a simplistic file system.
+4. These set up an IoT server on the Intel Edison platform that monitors temperature.
